@@ -1,7 +1,6 @@
-extern crate clap;
 
 use clap::{App, SubCommand};
-pub fn main_01a() {
+fn main() {
     // This example shows how to create an application with several arguments using usage strings, which can be
     // far less verbose that shown in 01b_QuickExample.rs, but is more readable. The downside is you cannot set
     // the more advanced configuration options using this method (well...actually you can, you'll see ;) )
@@ -47,12 +46,12 @@ pub fn main_01a() {
         .get_matches();
 
     // You can check the value provided by positional arguments, or option arguments
-    if let Some(o) = matches.value_of("output") {
-        println!("Value for output: {}", o);
+    if let Some(output) = matches.value_of("output") {
+        println!("Value for output: {}", output);
     }
 
-    if let Some(c) = matches.value_of("config") {
-        println!("Value for config: {}", c);
+    if let Some(config) = matches.value_of("config") {
+        println!("Value for config: {}", config);
     }
 
     // You can see how many times a particular flag or argument occurred
@@ -67,6 +66,7 @@ pub fn main_01a() {
     // You can check for the existence of subcommands, and if found use their
     // matches just as you would the top level app
     if let Some(matches) = matches.subcommand_matches("test") {
+        println!("twc");
         // "$ myapp test" was run
         if matches.is_present("list") {
             // "$ myapp test -l" was run

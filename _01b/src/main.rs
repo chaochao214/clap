@@ -1,12 +1,15 @@
 extern crate clap;
 
-use clap::{App, SubCommand};
-pub fn main_01a() {
-    // This example shows how to create an application with several arguments using usage strings, which can be
-    // far less verbose that shown in 01b_QuickExample.rs, but is more readable. The downside is you cannot set
-    // the more advanced configuration options using this method (well...actually you can, you'll see ;) )
+use clap::{App, Arg, SubCommand};
+
+fn main() {
+    // This method shows the traditional, and slightly more configurable way to set up arguments. This method is
+    // more verbose, but allows setting omre configuration options, and even supports easier dynamic generation.
     //
-    // The example below is functionally identical to the 01b_quick_example.rs and 01c_quick_example.rs
+    // The example below is functionally identical to the 01a_quick_example.rs and 01c_quick_example.rs
+    //
+    // *NOTE:* You can actually achieve the best of both worlds by using Arg::from_usage() (instead of Arg::with_name())
+    // and *then* setting any additional properties.
     //
     // Create an application with 5 possible arguments (2 auto generated) and 2 subcommands (1 auto generated)
     //    - A config file
@@ -34,15 +37,29 @@ pub fn main_01a() {
         .version("1.0")
         .author("Kevin K. <kbknapp@gmail.com>")
         .about("Does awesome things")
-        .args_from_usage(
-            "-c, --config=[FILE] 'Sets a custom config file'
-                                         <output> 'Sets an optional output file'
-                                         -d... 'Turn debugging information on'",
+        .arg(
+            Arg::with_name("config")
+                .short("c")
+                .long("config")
+                .value_name("FILE")
+                .help("Sets a custom config file")
+                .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("output")
+                .help("Sets an optional output file")
+                .index(1),
+        )
+        .arg(
+            Arg::with_name("debug")
+                .short("d")
+                .multiple(true)
+                .help("Turn debugging information on"),
         )
         .subcommand(
             SubCommand::with_name("test")
                 .about("does testing things")
-                .arg_from_usage("-l, --list 'lists test values'"),
+                .arg(Arg::with_name("list").short("l").help("lists test values")),
         )
         .get_matches();
 
@@ -57,7 +74,7 @@ pub fn main_01a() {
 
     // You can see how many times a particular flag or argument occurred
     // Note, only flags can have multiple occurrences
-    match matches.occurrences_of("d") {
+    match matches.occurrences_of("debug") {
         0 => println!("Debug mode is off"),
         1 => println!("Debug mode is kind of on"),
         2 => println!("Debug mode is on"),
