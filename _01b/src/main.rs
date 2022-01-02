@@ -45,6 +45,7 @@ fn main() {
                 .help("Sets a custom config file")
                 .takes_value(true),
         )
+
         .arg(
             Arg::with_name("output")
                 .help("Sets an optional output file")
@@ -54,12 +55,27 @@ fn main() {
             Arg::with_name("debug")
                 .short("d")
                 .multiple(true)
-                .help("Turn debugging information on"),
+                .help("Turn debugging information on")
+        )
+        .arg(
+            Arg::with_name("twc")
+                .long("twc")
+                .short("tt")
+                .takes_value(true)
+                .multiple(true)
+                .help("twc debug test -----------")
+
         )
         .subcommand(
             SubCommand::with_name("test")
                 .about("does testing things")
-                .arg(Arg::with_name("list").short("l").help("lists test values")),
+                .arg(Arg::with_name("list").short("l").help("lists test values"))
+        )
+        .subcommand(
+
+            SubCommand::with_name("subtwc")
+                .about("does testing things")
+                .arg(Arg::with_name("subtwc").short("s").long("subtwc").help("subtwc")),
         )
         .get_matches();
 
@@ -72,6 +88,9 @@ fn main() {
         println!("Value for config: {}", c);
     }
 
+    if let Some(twc) = matches.value_of("twc") {
+        println!("Value for config: {}", twc);
+    }
     // You can see how many times a particular flag or argument occurred
     // Note, only flags can have multiple occurrences
     match matches.occurrences_of("debug") {
@@ -90,6 +109,16 @@ fn main() {
             println!("Printing testing lists...");
         } else {
             println!("Not printing testing lists...");
+        }
+    }
+
+    if let Some(matches) = matches.subcommand_matches("subtwc") {
+        // "$ myapp test" was run
+        if matches.is_present("subtwc") {
+            // "$ myapp test -l" was run
+            println!("subtwc -------------------->f");
+        } else {
+            println!("error subtwc -------------------->f ");
         }
     }
 
